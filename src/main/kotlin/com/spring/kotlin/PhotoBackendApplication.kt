@@ -2,6 +2,8 @@ package com.spring.kotlin
 
 import com.google.cloud.spring.data.datastore.core.mapping.Entity
 import com.google.cloud.spring.data.datastore.repository.DatastoreRepository
+import com.google.cloud.spring.vision.CloudVisionTemplate
+import com.google.cloud.vision.v1.Feature
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContext
@@ -50,7 +52,8 @@ interface PhotoRepository : DatastoreRepository<Photo, String>
 @RestController
 class UploadController(
     private val photoRepository: PhotoRepository,
-    private val ctx: ApplicationContext
+    private val ctx: ApplicationContext,
+    private val visionTemplate: CloudVisionTemplate
 ) {
 
     private val bucket = "gs://photo-backend-app-photos/images"
@@ -68,10 +71,17 @@ class UploadController(
             }
         }
 
+        val response = visionTemplate.analyzeImage(file.resource, Feature.Type.LABEL_DETECTION)
+        println(response)
+        val labels = response.labelAnnotationsList.sortedByDescending { it.score }
+            .take(10)
+            .joinToString(" ") { it.description }
+
         return photoRepository.save(
             Photo(
                 id = id,
-                uri = "/images/$id"
+                uri = "/images/$id",
+                label = labels
             )
         )
     }
