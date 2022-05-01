@@ -4,6 +4,7 @@ import com.google.cloud.spring.data.datastore.core.mapping.Entity
 import com.google.cloud.spring.data.datastore.repository.DatastoreRepository
 import com.google.cloud.spring.vision.CloudVisionTemplate
 import com.google.cloud.vision.v1.Feature
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContext
@@ -56,6 +57,8 @@ class UploadController(
     private val visionTemplate: CloudVisionTemplate
 ) {
 
+    private val logger = LoggerFactory.getLogger(this.javaClass)
+
     private val bucket = "gs://photo-backend-app-photos/images"
 
     @PostMapping("/upload")
@@ -72,7 +75,7 @@ class UploadController(
         }
 
         val response = visionTemplate.analyzeImage(file.resource, Feature.Type.LABEL_DETECTION)
-        println(response)
+        logger.info(response.toString())
         val labels = response.labelAnnotationsList.sortedByDescending { it.score }
             .take(10)
             .joinToString(" ") { it.description }
