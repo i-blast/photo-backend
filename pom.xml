@@ -14,7 +14,7 @@
 	<name>photo-backend</name>
 	<description>Demo project for Spring Boot with Kotlin</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>11</java.version>
 		<kotlin.version>1.6.21</kotlin.version>
 		<spring-cloud-gcp.version>3.2.1</spring-cloud-gcp.version>
 		<spring-cloud.version>2021.0.1</spring-cloud.version>
@@ -51,10 +51,6 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-reflect</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib-jdk8</artifactId>
 		</dependency>
 
 		<dependency>
